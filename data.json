@@ -1,0 +1,318 @@
+{
+  "site": {
+    "name": "Shuvro Sarker",
+    "monogram": "SS",
+    "role": "BLOCKCHAIN ENGINEER & RESEARCHER",
+    "title": "Shuvro Sarker — Engineer & Researcher"
+  },
+  "settings": {
+    "accent": "#b84232",
+    "showVerified": true,
+    "showStatus": true
+  },
+  "images": {
+    "cover": "./15.jpg",
+    "profile": "./25.png"
+  },
+  "links": {
+    "cv": "cv.pdf",
+    "github": "#",
+    "linkedin": "#",
+    "email": "your@email.com"
+  },
+  "profile": {
+    "location": "Dhaka · Bangladesh",
+    "specialties": "Blockchain and data-focused developer with experience in building decentralized systems and analyzing system performance through data-driven approaches. Skilled in smart contract development, researchdriven system design and Web3 integration.",
+    "focus": "Blockchain Security • Smart Contract Auditing • DeFi • Applied Cryptography"
+  },
+  "quotes": [
+    {
+      "text": "The reasonable man adapts himself to the world; the unreasonable one persists in trying to adapt the world to himself. Therefore all progress depends on the unreasonable man.",
+      "author": "George Bernard Shaw"
+    },
+    {
+      "text": "It is not enough to do your best; you must know what to do, and then do your best.",
+      "author": "Edwards Deming"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Solidity",
+      "icon": "ethereum"
+    },
+    {
+      "name": "Smart Contracts",
+      "icon": "network"
+    },
+    {
+      "name": "EVM Architecture",
+      "icon": "server"
+    },
+    {
+      "name": "Security Auditing"
+    },
+    {
+      "name": "Zero-Knowledge"
+    },
+    {
+      "name": "DeFi"
+    },
+    {
+      "name": "Go"
+    },
+    {
+      "name": "TypeScript"
+    },
+    {
+      "name": "Foundry"
+    }
+  ],
+  "sections": [
+    {
+      "id": "profile",
+      "number": "01.1",
+      "title": "PROFILE",
+      "note": "WHO I AM",
+      "type": "profile",
+      "content": ""
+    },
+    {
+      "id": "engineering",
+      "number": "02",
+      "title": "ENGINEERING",
+      "note": "WHAT I BUILD",
+      "type": "engineering",
+      "items": [
+        {
+          "number": "02.01",
+          "title": "SMART CONTRACT ENGINEERING",
+          "description": "Designing and deploying Solidity-based smart contracts for decentralized applications, with attention to execution cost, transaction flow and on-chain reliability.",
+          "tags": [
+            "SOLIDITY",
+            "ETHEREUM",
+            "HARDHAT / GANACHE",
+            "POLYGON"
+          ]
+        },
+        {
+          "number": "02.02",
+          "title": "BLOCKCHAIN SYSTEMS",
+          "description": "Building Web3 applications that connect smart contracts, decentralized storage, and application-layer services into practical blockchain systems.",
+          "tags": [
+            "WEB3.JS",
+            "ETHERS.JS",
+            "IPFS",
+            "REST APIs"
+          ]
+        },
+        {
+          "number": "02.03",
+          "title": "SECURITY & PRIVACY",
+          "description": "Researching decentralized identity, privacy-preserving verification and blockchain security through practical experimentation with zero-knowledge proofs and trusted execution environments.",
+          "tags": [
+            "ZKP",
+            "TEE",
+            "SECURITY",
+            "DATA ANALYSIS",
+            "IPFS",
+            "IDENTITY"
+          ]
+        },
+        {
+          "number": "02.04",
+          "title": "DATA & SYSTEM ANALYSIS",
+          "description": "Analyzing system performance and testing alternative architectures to evaluate execution cost, transaction throughput, scalability and engineering trade-offs.",
+          "tags": [
+            "PYTHON",
+            "SQL",
+            "DATA ANALYSIS",
+            "SYSTEMS ENGINEERING",
+            "LATEX",
+            "EXCEL"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "number": "03",
+      "title": "RESEARCH",
+      "note": "WHAT I INVESTIGATE",
+      "type": "research",
+      "items": [
+        {
+          "year": "CURRENT",
+          "title": "Zero-Knowledge Proof Systems",
+          "description": "Exploring cryptographic proof systems that enable computation to be verified without revealing unnecessary information.",
+          "state": "ACTIVE RESEARCH"
+        },
+        {
+          "year": "2026",
+          "title": "Smart Contract Security",
+          "description": "Investigating vulnerability patterns, security assumptions and systematic approaches to smart-contract analysis.",
+          "state": "INVESTIGATION"
+        },
+        {
+          "year": "ONGOING",
+          "title": "Verifiable Computation",
+          "description": "Studying the relationship between computation, trust and verification in decentralized systems.",
+          "state": "EXPLORING"
+        }
+      ]
+    },
+    {
+      "id": "projects",
+      "number": "04",
+      "title": "PROJECTS",
+      "note": "SELECTED WORK",
+      "type": "projects",
+      "items": [
+        {
+          "type": "BLOCKCHAIN SECURITY",
+          "year": "2026",
+          "title": "DeepShield",
+          "description": "A security-oriented system focused on analysing smart contracts and identifying potentially dangerous behaviour across EVM-based systems.",
+          "stack": "Solidity · EVM · Security",
+          "visual": true,
+          "links": [
+            {
+              "label": "CASE STUDY ↗",
+              "url": "#"
+            },
+            {
+              "label": "GITHUB ↗",
+              "url": "#"
+            }
+          ]
+        },
+        {
+          "type": "BLOCKCHAIN / SYSTEMS",
+          "year": "2025",
+          "title": "SmartAgroChain",
+          "description": "A blockchain-based exploration of agricultural supply chains, traceability and distributed data.",
+          "stack": "Blockchain · Supply Chain",
+          "visual": false,
+          "links": [
+            {
+              "label": "CASE STUDY ↗",
+              "url": "#"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "experience",
+      "number": "05",
+      "title": "EXPERIENCE",
+      "note": "PROFESSIONAL",
+      "type": "experience",
+      "items": [
+        {
+          "date": "2026\nUPCOMING",
+          "title": "Blockchain Developer Intern",
+          "company": "BOOLEAN FORCE",
+          "description": "Working with blockchain engineering, smart contracts and decentralized systems."
+        },
+        {
+          "date": "PREVIOUS",
+          "title": "Your Previous Role",
+          "company": "ORGANIZATION",
+          "description": "Replace this section with your previous professional or research experience."
+        }
+      ]
+    },
+    {
+      "id": "education",
+      "number": "06",
+      "title": "EDUCATION",
+      "note": "ACADEMIC",
+      "type": "education",
+      "items": [
+        {
+          "title": "Your Engineering Degree",
+          "school": "UNIVERSITY / INSTITUTION",
+          "description": "Department · Specialization · Graduation Year"
+        }
+      ]
+    },
+    {
+      "id": "publications",
+      "number": "07",
+      "title": "PUBLICATIONS",
+      "note": "RESEARCH OUTPUT",
+      "type": "publications",
+      "items": [
+        {
+          "number": "01 / RESEARCH",
+          "title": "Your Research Paper Title",
+          "meta": "Shuvro Sarker · 2026 · Conference / Journal",
+          "label": "VIEW PAPER ↗",
+          "url": "#"
+        },
+        {
+          "number": "02 / TECHNICAL NOTE",
+          "title": "Your Technical Investigation",
+          "meta": "Technical Note · 2026",
+          "label": "READ ↗",
+          "url": "#"
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "number": "08",
+      "title": "CONTACT",
+      "note": "",
+      "type": "contact",
+      "heading": "Let's work on something difficult.",
+      "description": "I am interested in engineering roles, research opportunities, technical collaborations and challenging problems involving secure and decentralized systems."
+    }
+  ],
+  "footer": {
+    "left": "SHUVRO SARKER",
+    "right": "ENGINEER / RESEARCHER · 2026"
+  },
+  "navigation": [
+    {
+      "target": "about",
+      "number": "01",
+      "label": "ABOUT"
+    },
+    {
+      "target": "engineering",
+      "number": "02",
+      "label": "ENGINEERING"
+    },
+    {
+      "target": "research",
+      "number": "03",
+      "label": "RESEARCH"
+    },
+    {
+      "target": "projects",
+      "number": "04",
+      "label": "PROJECTS"
+    },
+    {
+      "target": "experience",
+      "number": "05",
+      "label": "EXPERIENCE"
+    },
+    {
+      "target": "education",
+      "number": "06",
+      "label": "EDUCATION"
+    },
+    {
+      "target": "publications",
+      "number": "07",
+      "label": "PUBLICATIONS"
+    },
+    {
+      "target": "contact",
+      "number": "08",
+      "label": "CONTACT"
+    }
+  ]
+}

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title id="page-title">Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+    <a href="#about" class="identity">
+        <div class="monogram" data-bind="site.monogram">SS</div>
+        <div class="name" data-bind="site.name">Shuvro Sarker</div>
+        <div class="role" data-bind="site.role">BLOCKCHAIN ENGINEER<br>&amp; RESEARCHER</div>
+    </a>
+
+    <button class="mobile-menu-toggle" aria-label="Open navigation" aria-expanded="false">
+        ☰
+    </button>
+
+    <div class="index-label">INDEX</div>
+    <nav class="index" id="sidebar-index"></nav>
+
+    <div class="sidebar-bottom">
+        <div class="sidebar-links">
+            <a id="cv-link" href="cv.pdf">↓ DOWNLOAD CV</a>
+            <a id="github-link" href="#">↗ GITHUB</a>
+            <a id="linkedin-link" href="#">↗ LINKEDIN</a>
+        </div>
+
+        <div class="sidebar-status" id="status">
+            <span class="status-dot"></span> OPEN TO OPPORTUNITIES
+        </div>
+    </div>
+</aside>
+
+<main class="main">
+    <div class="content" id="portfolio-content"></div>
+</main>
+
+</div>
+
+<script>
+const DATA_URL="./data.json";
+
+const esc=(v="")=>String(v).replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+}[c]));
+
+const link=(url,label,cls="")=>
+    `<a href="${esc(url||"#")}" class="${cls}">${esc(label)}</a>`;
+
+async function loadData(){
+    const r=await fetch(`${DATA_URL}?v=${Date.now()}`);
+    if(!r.ok)throw new Error("Could not load data.json");
+    return r.json();
+}
+
+function renderSidebar(d){
+    document.querySelector("#sidebar-index").innerHTML=d.navigation.map(x=>
+        `<a href="#${esc(x.target)}"><span>${esc(x.number)}</span>${esc(x.label)}</a>`
+    ).join("");
+
+    document.querySelector("#cv-link").href=d.links.cv;
+    document.querySelector("#github-link").href=d.links.github;
+    document.querySelector("#linkedin-link").href=d.links.linkedin;
+
+    const status=document.querySelector("#status");
+    status.style.display=d.settings.showStatus?"":"none";
+}
+
+function header(s){
+    return `<div class="section-header">
+        <div><span class="section-number">${esc(s.number)}</span>
+        <span class="section-title">${esc(s.title)}</span></div>
+        ${s.note?`<div class="section-note">${esc(s.note)}</div>`:""}
+    </div>`;
+}
+
+function renderAbout(d){
+    return `<section class="hero" id="about">
+
+        <div class="profile-cover">
+            <div class="cover-grid">
+                <img src="${esc(d.images.cover)}" alt="Cover Banner" class="cover-photo">
+            </div>
+        </div>
+
+        <div class="profile-header">
+            <div class="profile-photo-wrap">
+                <img src="${esc(d.images.profile)}" alt="${esc(d.site.name)}" class="profile-photo">
+            </div>
+
+            <div class="profile-main">
+                <div class="profile-name-row">
+                    <h1>${esc(d.site.name)}</h1>
+                    ${d.settings.showVerified?`<span class="profile-verified">✓</span>`:""}
+                </div>
+
+                <div class="profile-role">${esc(d.profile.location)}</div>
+                <div class="profile-specialties">${esc(d.profile.specialties)}</div>
+                <div class="profile-location">${esc(d.profile.focus)}</div>
+
+                <div class="profile-actions">
+                    ${link(d.links.cv,"DOWNLOAD CV","button primary")}
+                    ${link(d.links.github,"GITHUB","button")}
+                    ${link("#contact","CONTACT","button")}
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-highlights">
+            ${d.quotes.map(q=>`
+                <article class="profile-highlight">
+                    <h3>${esc(q.text)}</h3>
+                    <p class="quote-text">
+                        <span class="quote-author">— ${esc(q.author)}</span>
+                    </p>
+                </article>
+            `).join("")}
+        </div>
+
+        <div class="profile-about">
+            <div class="profile-about-label">SKILLS</div>
+            <div class="skills-container">
+                ${d.skills.map(s=>`
+                    <div class="skill-badge">
+                        ${s.icon?`<span class="skill-icon">◆</span>`:""}
+                        <span>${esc(s.name)}</span>
+                    </div>
+                `).join("")}
+            </div>
+        </div>
+
+    </section>`;
+}
+
+function renderProfile(s){
+    return `<section class="section" id="profile">
+        ${header(s)}
+        <div class="about-grid">
+            <div class="about-small">${esc(s.content)}</div>
+        </div>
+
+
+<div class="about-profile">
+
+    <div class="profile-block">
+        <div class="profile-block-label">
+            BACKGROUND
+        </div>
+
+        <div class="profile-block-content">
+            <p class="profile-lead">
+                Blockchain Developer & Security Researcher
+            </p>
+
+            <p>
+                B.Sc. in Computer Science and Engineering <br>
+                United International University, Dhaka, Bangladesh
+            </p>
+        </div>
+    </div>
+
+
+    <div class="profile-block">
+
+        <div class="profile-block-label">
+            RESEARCH
+        </div>
+
+        <div class="profile-block-content">
+
+            <p>
+                Published research in <strong>IEEE BuildSec</strong> and <strong>TENSYMP</strong><br>
+                Focusing on applied cryptography, secure distributed computation and blockchain security.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-block">
+
+        <div class="profile-block-label">
+            ENGINEERING
+        </div>
+
+        <div class="profile-block-content">
+
+            <p>
+                <strong>Smart-contract engineering</strong> · <strong>EVM architecture</strong> <br>
+                Zero-knowledge systems · Secure protocol design
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-block">
+
+        <div class="profile-block-label">
+            APPLICATION
+        </div>
+
+        <div class="profile-block-content">
+
+            <p>
+                <strong>SmartAgroChain</strong> · <strong>DeepShield</strong> <br>
+Translating cryptographic research into resilient, tamper-resistant Web3 infrastructure.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+    </section>`;
+}
+
+function renderEngineering(s){
+    return `<section class="section" id="${esc(s.id)}">
+        ${header(s)}
+        <div class="skills">
+            ${s.items.map(x=>`
+                <article class="skill">
+                    <div class="skill-number">${esc(x.number)}</div>
+                    <h3>${esc(x.title)}</h3>
+                    <p>${esc(x.description)}</p>
+                    <div class="tags">
+                        ${x.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}
+                    </div>
+                </article>
+            `).join("")}
+        </div>
+    </section>`;
+}
+
+function renderResearch(s){
+    return `<section class="section" id="${esc(s.id)}">
+        ${header(s)}
+        ${s.items.map(x=>`
+            <article class="research-item">
+                <div class="research-year">${esc(x.year)}</div>
+                <div>
+                    <h3>${esc(x.title)}</h3>
+                    <p>${esc(x.description)}</p>
+                    <span class="research-state">${esc(x.state)}</span>
+                </div>
+            </article>
+        `).join("")}
+    </section>`;
+}
+
+function renderProjects(s){
+    return `<section class="section" id="${esc(s.id)}">
+        ${header(s)}
+        ${s.items.map(x=>`
+            <article class="project">
+                <div class="project-top">
+                    <span class="project-type">${esc(x.type)}</span>
+                    <span>${esc(x.year)}</span>
+                </div>
+
+                <h3>${esc(x.title)}</h3>
+                <p class="project-description">${esc(x.description)}</p>
+
+                ${x.visual?`
+                    <div class="project-visual">
+                        <div class="core"></div>
+                        <span class="visual-label top">CONTRACT / ANALYSIS</span>
+                        <span class="visual-label bottom">SECURITY MODEL</span>
+                    </div>
+                `:""}
+
+                <div class="project-footer">
+                    <div class="project-stack">${esc(x.stack)}</div>
+                    <div class="project-links">
+                        ${x.links.map(l=>link(l.url,l.label)).join("")}
+                    </div>
+                </div>
+            </article>
+        `).join("")}
+    </section>`;
+}
+
+function renderExperience(s){
+    return `<section class="section" id="${esc(s.id)}">
+        ${header(s)}
+        ${s.items.map(x=>`
+            <article class="experience">
+                <div class="experience-date">${esc(x.date).replace(/\n/g,"<br>")}</div>
+                <div>
+                    <h3>${esc(x.title)}</h3>
+                    <div class="company">${esc(x.company)}</div>
+                    <p>${esc(x.description)}</p>
+                </div>
+            </article>
+        `).join("")}
+    </section>`;
+}
+
+function renderEducation(s){
+    return `<section class="section" id="${esc(s.id)}">
+        ${header(s)}
+        ${s.items.map(x=>`
+            <article class="education">
+                <h3>${esc(x.title)}</h3>
+                <div class="education-school">${esc(x.school)}</div>
+                <p>${esc(x.description)}</p>
+            </article>
+        `).join("")}
+    </section>`;
+}
+
+function renderPublications(s){
+    return `<section class="section" id="${esc(s.id)}">
+        ${header(s)}
+        ${s.items.map(x=>`
+            <article class="paper">
+                <div class="paper-number">${esc(x.number)}</div>
+                <h3>${esc(x.title)}</h3>
+                <div class="paper-meta">${esc(x.meta)}</div>
+                ${link(x.url,x.label)}
+            </article>
+        `).join("")}
+    </section>`;
+}
+
+function renderContact(s,d){
+    return `<section class="section" id="${esc(s.id)}">
+        ${header(s)}
+        <div class="contact">
+            <h2>${esc(s.heading)}</h2>
+            <p>${esc(s.description)}</p>
+            <div class="contact-links">
+                ${link("mailto:"+d.links.email,"EMAIL","button primary")}
+                ${link(d.links.github,"GITHUB ↗","button")}
+                ${link(d.links.linkedin,"LINKEDIN ↗","button")}
+            </div>
+        </div>
+    </section>`;
+}
+
+const renderers={
+    profile:renderProfile,
+    engineering:renderEngineering,
+    research:renderResearch,
+    projects:renderProjects,
+    experience:renderExperience,
+    education:renderEducation,
+    publications:renderPublications,
+    contact:renderContact
+};
+
+function renderSections(d){
+    return d.sections.map(s=>
+        renderers[s.type]?renderers[s.type](s,d):""
+    ).join("");
+}
+
+function activateIndex(){
+    const sections=document.querySelectorAll("section[id]");
+    const links=document.querySelectorAll(".index a");
+
+    const observer=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{
+            if(!e.isIntersecting)return;
+
+            links.forEach(a=>
+                a.classList.toggle(
+                    "active",
+                    a.getAttribute("href")==="#"+e.target.id
+                )
+            );
+        });
+    },{threshold:.35});
+
+    sections.forEach(s=>observer.observe(s));
+}
+
+function projectInteraction(){
+    document.querySelectorAll(".project-visual").forEach(v=>{
+        const core=v.querySelector(".core");
+
+        v.addEventListener("mousemove",e=>{
+            const r=v.getBoundingClientRect();
+            const x=(e.clientX-r.left)/r.width;
+            const y=(e.clientY-r.top)/r.height;
+
+            core.style.transform=
+                `translate(-50%,-50%) rotate(45deg)
+                rotateX(${(y-.5)*8}deg)
+                rotateY(${(x-.5)*8}deg) scale(1.05)`;
+        });
+
+        v.addEventListener("mouseleave",()=>{
+            core.style.transform=
+                "translate(-50%,-50%) rotate(45deg)";
+        });
+    });
+}
+
+function mobileNavigation(){
+    const menu=document.querySelector(".mobile-menu-toggle");
+    const sidebar=document.querySelector(".sidebar");
+
+    if(!menu)return;
+
+    menu.addEventListener("click",()=>{
+        const open=sidebar.classList.toggle("menu-open");
+        menu.setAttribute("aria-expanded",open);
+    });
+
+    document.querySelectorAll(".index a").forEach(a=>{
+        a.addEventListener("click",()=>{
+            if(innerWidth<=700){
+                sidebar.classList.remove("menu-open");
+                menu.setAttribute("aria-expanded","false");
+            }
+        });
+    });
+}
+
+async function init(){
+    try{
+        const d=await loadData();
+
+        document.title=d.site.title;
+        renderSidebar(d);
+
+        document.querySelector("#portfolio-content").innerHTML=
+            renderAbout(d)+
+            renderSections(d)+
+            `<footer class="footer">
+                <span>${esc(d.footer.left)}</span>
+                <span>${esc(d.footer.right)}</span>
+            </footer>`;
+
+        activateIndex();
+        projectInteraction();
+        mobileNavigation();
+
+    }catch(e){
+        document.body.innerHTML=
+            `<div class="json-error">
+                Could not load portfolio data.<br><br>
+                ${esc(e.message)}<br><br>
+                Run this site through a local web server.
+            </div>`;
+    }
+}
+
+init();
+</script>
+
+</body>
+</html>

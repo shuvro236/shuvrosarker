@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Editor — Shuvro Sarker</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f7f7f4;color:#171817;font-family:Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;background:#f7f7f4;border-bottom:1px solid #dcded8;padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
+h1{font-size:18px;margin:0}button{border:1px solid #171817;background:#171817;color:white;padding:10px 15px;cursor:pointer;font-family:monospace}
+button.secondary{background:transparent;color:#171817;border-color:#c5c8c1}.wrap{max-width:1100px;margin:auto;padding:30px 22px 80px}
+.card{background:#fcfcfa;border:1px solid #dcded8;padding:22px;margin-bottom:18px}.card h2{font-size:15px;margin:0 0 18px;font-family:monospace}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field{display:flex;flex-direction:column;gap:6px}.full{grid-column:1/-1}
+label{font:10px monospace;color:#666963;text-transform:uppercase;letter-spacing:.06em}input,textarea,select{width:100%;border:1px solid #c5c8c1;background:white;padding:10px;font:13px Arial;color:#171817}textarea{min-height:100px;resize:vertical}
+.item{border-top:1px solid #dcded8;padding:18px 0;position:relative}.item:first-child{border-top:0}.item-actions{position:absolute;right:0;top:15px;display:flex;gap:5px}.item-actions button{padding:6px 9px;font-size:11px}.array-actions{display:flex;gap:8px;margin-top:12px}.hint{font:10px monospace;color:#92958f;margin-top:8px}.toast{position:fixed;right:20px;bottom:20px;background:#171817;color:white;padding:12px 16px;font:11px monospace;display:none}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.full{grid-column:auto}header{align-items:flex-start;gap:10px}.wrap{padding:20px 14px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>PORTFOLIO EDITOR / JSON</h1>
+  <div>
+    <button class="secondary" onclick="resetData()">RESET</button>
+    <button onclick="downloadJSON()">DOWNLOAD data.json</button>
+  </div>
+</header>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+let originalData=null, data=null;
+const esc=(v="")=>String(v).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+async function init(){
+  try{
+    const r=await fetch("./data.json?v="+Date.now());
+    originalData=await r.json();
+    const saved=localStorage.getItem("portfolio-draft");
+    data=saved?JSON.parse(saved):structuredClone(originalData);
+    render();
+  }catch(e){
+    document.getElementById("app").innerHTML="<div class='card'>Could not load data.json. Run with Live Server.</div>";
+  }
+}
+
+function saveDraft(){localStorage.setItem("portfolio-draft",JSON.stringify(data));toast("Draft saved locally");}
+function toast(t){const x=document.getElementById("toast");x.textContent=t;x.style.display="block";setTimeout(()=>x.style.display="none",1600)}
+function set(path,value){
+  const parts=path.split(".");
+  let o=data; for(let i=0;i<parts.length-1;i++)o=o[parts[i]];
+  o[parts.at(-1)]=value; saveDraft();
+}
+function val(path){return path.split(".").reduce((o,k)=>o?.[k],data)??""}
+function input(label,path,full=false){
+  return `<div class="field ${full?"full":""}"><label>${label}</label><input data-path="${path}" value="${esc(val(path))}"></div>`;
+}
+function area(label,path,full=true){
+  return `<div class="field ${full?"full":""}"><label>${label}</label><textarea data-path="${path}">${esc(val(path))}</textarea></div>`;
+}
+function bindInputs(){
+  document.querySelectorAll("[data-path]").forEach(el=>{
+    el.addEventListener("input",()=>set(el.dataset.path,el.value));
+  });
+}
+
+function render(){
+  document.getElementById("app").innerHTML=`
+  <div class="card"><h2>SITE</h2><div class="grid">
+    ${input("Name","site.name")}${input("Monogram","site.monogram")}
+    ${input("Role","site.role")}${input("Page title","site.title")}
+    ${input("Cover image","images.cover")}${input("Profile image","images.profile")}
+    ${input("CV","links.cv")}${input("GitHub","links.github")}
+    ${input("LinkedIn","links.linkedin")}${input("Email","links.email")}
+    ${input("Accent color","settings.accent")}
+  </div></div>
+
+  <div class="card"><h2>PROFILE</h2><div class="grid">
+    ${input("Location","profile.location")}
+    ${input("Focus","profile.focus")}
+    ${area("Specialties","profile.specialties")}
+  </div></div>
+
+  ${arrayEditor("QUOTES","quotes",["text","author"])}
+  ${arrayEditor("SKILLS","skills",["name","icon"])}
+  ${sectionEditor()}
+  ${arrayEditor("NAVIGATION","navigation",["target","number","label"])}
+  <div class="card"><h2>FOOTER</h2><div class="grid">
+    ${input("Left","footer.left")}${input("Right","footer.right")}
+  </div></div>
+  <div class="card"><h2>FINAL ACTION</h2>
+    <p class="hint">The browser cannot directly overwrite your local data.json. Download the generated JSON and replace the old data.json with it.</p>
+    <button onclick="downloadJSON()">DOWNLOAD UPDATED data.json</button>
+  </div>`;
+  bindInputs();
+}
+
+function arrayEditor(title,path,fields){
+  const arr=val(path)||[];
+  return `<div class="card"><h2>${title}</h2>${arr.map((item,i)=>`
+    <div class="item"><div class="item-actions">
+      <button class="secondary" onclick="removeItem('${path}',${i})">REMOVE</button>
+    </div><div class="grid">
+      ${fields.map(f=>`<div class="field ${f==="text"?"full":""}"><label>${f}</label>
+      <input data-array="${path}" data-index="${i}" data-field="${f}" value="${esc(item[f]??"")}"></div>`).join("")}
+    </div></div>`).join("")}
+    <div class="array-actions"><button class="secondary" onclick="addItem('${path}')">+ ADD</button></div>
+  </div>`;
+}
+
+function sectionEditor(){
+  return `<div class="card"><h2>CONTENT SECTIONS</h2>
+  ${data.sections.map((s,i)=>`
+    <div class="item">
+      <div class="grid">
+        ${fieldArray("Section ID",`sections.${i}.id`,s.id)}
+        ${fieldArray("Number",`sections.${i}.number`,s.number)}
+        ${fieldArray("Title",`sections.${i}.title`,s.title)}
+        ${fieldArray("Note",`sections.${i}.note`,s.note)}
+        ${fieldArray("Type",`sections.${i}.type`,s.type)}
+        ${s.type==="profile"?fieldArray("Content",`sections.${i}.content`,s.content,true):""}
+        ${["engineering","research","projects","experience","education","publications"].includes(s.type)?
+          `<div class="field full"><label>${s.type.toUpperCase()} ITEMS</label>
+          <textarea data-section-items="${i}">${esc(JSON.stringify(s.items,null,2))}</textarea>
+          <div class="hint">Advanced: edit this section's items as JSON. Save is automatic.</div></div>`:""}
+        ${s.type==="contact"?`
+          ${fieldArray("Heading",`sections.${i}.heading`,s.heading,true)}
+          ${fieldArray("Description",`sections.${i}.description`,s.description,true)}`:""}
+      </div>
+      <div class="array-actions"><button class="secondary" onclick="removeItem('sections',${i})">REMOVE SECTION</button></div>
+    </div>`).join("")}
+    <div class="array-actions"><button class="secondary" onclick="addSection()">+ ADD SECTION</button></div>
+  </div>`;
+}
+
+function fieldArray(label,path,value,full=false){
+  return `<div class="field ${full?"full":""}"><label>${label}</label><input data-path="${path}" value="${esc(value??"")}"></div>`;
+}
+
+document.addEventListener("input",e=>{
+  if(e.target.dataset.array){
+    const {array,index,field}=e.target.dataset;
+    data[array][Number(index)][field]=e.target.value;saveDraft();
+  }
+  if(e.target.dataset.sectionItems){
+    try{data.sections[Number(e.target.dataset.sectionItems)].items=JSON.parse(e.target.value);saveDraft();}
+    catch(_){}
+  }
+});
+
+function removeItem(path,i){
+  val(path).splice(i,1);saveDraft();render();
+}
+function addItem(path){
+  const templates={
+    quotes:{text:"New quote",author:"Author"},
+    skills:{name:"New skill",icon:""},
+    navigation:{target:"new-section",number:"09",label:"NEW SECTION"}
+  };
+  val(path).push(structuredClone(templates[path]||{}));saveDraft();render();
+}
+function addSection(){
+  data.sections.push({id:"new-section",number:"09",title:"NEW SECTION",note:"",type:"profile",content:"New section content."});
+  saveDraft();render();
+}
+function resetData(){
+  if(!confirm("Discard the current local draft?"))return;
+  localStorage.removeItem("portfolio-draft");
+  data=structuredClone(originalData);render();toast("Draft reset");
+}
+function downloadJSON(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download="data.json";a.click();
+  URL.revokeObjectURL(a.href);toast("data.json downloaded");
+}
+init();
+</script>
+</body>
+</html>
